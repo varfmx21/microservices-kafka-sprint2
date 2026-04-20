@@ -29,7 +29,7 @@ public class StringProducerService {
             if (message.contains("prophet")) {
                 partition = 0;
             }
-        } else if(message.contains("flood")){
+        } else if(message.contains("flood")) {
             topic = "flood-topic";
             if (message.contains("gravemind")) {
                 partition = 0;
@@ -41,8 +41,7 @@ public class StringProducerService {
         }
 
 
-        //kafkaTemplate.send("str-topic", partition, null, message)
-        kafkaTemplate.send(topic,partition,null, message).whenComplete((result,ex) -> {
+        kafkaTemplate.send(topic, partition,null, message).whenComplete((result,ex) -> {
             if(ex != null){
                 log.error("Error, al enviar el mensaje: {}",ex.getMessage());
             }
@@ -51,25 +50,3 @@ public class StringProducerService {
         });
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-String topic;
-        if(message.contains("te")){
-            topic = "topic-2";
-        }else{
-            topic = "str-topic";
-        }
-*/

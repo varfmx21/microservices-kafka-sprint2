@@ -1,4 +1,4 @@
-package com.lta.backend.resources;
+package com.lta.backend.controller;
 
 import com.lta.backend.services.ResponseListener;
 import com.lta.backend.services.StringProducerService;
