@@ -15,6 +15,7 @@ public class StringProducerService {
     public void sendMessage(String message){
 
         int partition;
+        String topic; // 1. unsc-topic, 2.- covenant-topic, 3.- flood-topic.
 
         if(message.contains("menu")){
             partition = 1; // listener2 (procesa y responde)
