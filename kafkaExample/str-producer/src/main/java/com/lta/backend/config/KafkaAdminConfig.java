@@ -27,8 +27,10 @@ public class KafkaAdminConfig {
     @Bean
     public KafkaAdmin.NewTopics topics(){
         return new KafkaAdmin.NewTopics(
-            TopicBuilder.name("str-topic").partitions(2).replicas(1).build(),
-            TopicBuilder.name("str-topic-response").partitions(2).replicas(1).build()
+            TopicBuilder.name("unsc-topic").partitions(2   ).replicas(1).build(),
+            TopicBuilder.name("covenant-topic").partitions(1).replicas(1).build(),
+            TopicBuilder.name("flood-topic").partitions(1).replicas(1).build(),
+            TopicBuilder.name("forerunner-response-topic").partitions(1).replicas(1).build()
         );
     }
 }
