@@ -91,6 +91,30 @@ docker-compose down
 docker-compose down -v
 docker system prune -f
 
+▶ Consumer adicional en Python (extra)
+
+Este proyecto incluye un consumer independiente en:
+
+`python-consumer/consumer.py`
+
+Capacidades:
+
+- Se conecta a Kafka
+- Consume mensajes de uno o varios topicos
+- Procesa y visualiza datos con resumen en consola (conteos por topico y clasificacion)
+
+Ejecuta:
+
+cd python-consumer
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python consumer.py --from-beginning
+
+Para personalizar topicos:
+
+python consumer.py --topics unsc-topic covenant-topic flood-topic --group-id python-extra-consumer
+
 
 __consumer_offsets
 
