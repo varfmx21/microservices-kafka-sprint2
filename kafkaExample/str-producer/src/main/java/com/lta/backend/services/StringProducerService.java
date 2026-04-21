@@ -13,37 +13,40 @@ public class StringProducerService {
     private KafkaTemplate<String,String> kafkaTemplate;
 
     public void sendMessage(String message){
+        if (message == null || message.trim().isEmpty()) {
+            log.warn("Mensaje vacio: no se enviara a Kafka");
+            return;
+        }
 
-        int partition;
-        String topic; // 1. unsc-topic, 2.- covenant-topic, 3.- flood-topic, 4.- forerunner-response-topic.
+        Integer partition = 0;
+        String topic = null; // 1. unsc-topic, 2.- covenant-topic, 3.- flood-topic, 4.- forerunner-response-topic.
+        String normalizedMessage = message.toLowerCase();
 
-        if(message.contains("unsc")){
+        if(normalizedMessage.contains("unsc")){
             topic = "unsc-topic";
-            if (message.contains("chief")){
+            if (normalizedMessage.contains("chief")){
                 partition = 0;
-            } else if (message.contains("cortana")){
+            } else if (normalizedMessage.contains("cortana")){
                 partition = 1;
             }
-        } else if(message.contains("covenant")){
+        } else if(normalizedMessage.contains("covenant")){
             topic = "covenant-topic";
-            if (message.contains("prophet")) {
-                partition = 0;
-            }
-        } else if(message.contains("flood")) {
+        } else if(normalizedMessage.contains("flood")) {
             topic = "flood-topic";
-            if (message.contains("gravemind")) {
-                partition = 0;
-            }
-        } else if(message.contains("forerunner")){
+        } else if(normalizedMessage.contains("forerunner")){
             topic = "forerunner-response-topic";
-        } else {
-            topic = "none";
+        }
+
+        if (topic == null) {
+            log.warn("Mensaje sin regla de enrutamiento, no se enviara a Kafka: {}", message);
+            return;
         }
 
 
         kafkaTemplate.send(topic, partition,null, message).whenComplete((result,ex) -> {
             if(ex != null){
                 log.error("Error, al enviar el mensaje: {}",ex.getMessage());
+                return;
             }
             log.info("Mensaje enviado con exito: {}",result.getProducerRecord().value());
             log.info("Particion {}, Offset {}", result.getRecordMetadata().partition(),result.getRecordMetadata().offset());

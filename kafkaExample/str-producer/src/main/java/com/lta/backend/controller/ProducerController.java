@@ -19,17 +19,29 @@ public class ProducerController {
     @Autowired
     private StringProducerService producer;
 
-    @GetMapping("/menu")
-    public String sendMenu(@RequestParam String message) throws InterruptedException {
-        return sendAndWait(message);
+    @PostMapping
+    public ResponseEntity<String> sendFromFrontend(@RequestBody String message) {
+        if (message == null || message.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("El mensaje no puede estar vacio");
+        }
+
+        producer.sendMessage(message.trim());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Mensaje enviado a Kafka");
     }
 
-    @GetMapping("/test")
-    public String sendTest(@RequestParam String message) throws InterruptedException {
-        return sendAndWait(message);
+    @GetMapping
+    public ResponseEntity<String> sendMenu(@RequestParam(required = false) String message) throws InterruptedException {
+        if (message == null || message.trim().isEmpty()) {
+            return ResponseEntity.ok(
+                    ResponseListener.response != null
+                            ? ResponseListener.response
+                            : "Esperando respuesta..."
+            );
+        }
+
+        return ResponseEntity.ok(sendAndWait(message.trim()));
     }
 
-    // MÉTODO REUTILIZABLE
     private String sendAndWait(String message) throws InterruptedException {
 
         ResponseListener.response = null;
