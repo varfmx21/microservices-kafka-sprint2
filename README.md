@@ -70,7 +70,35 @@ Abre la URL que muestra Vite (normalmente `http://localhost:5173`).
 3. `str-producer`
 4. `frontProducerDoctors`
 
-## 6. Detener todo
+## 6. Consumer Python (opcional)
+
+En otra terminal nueva:
+
+```bash
+cd kafkaExample/python-consumer
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python consumer.py --from-beginning
+```
+
+En Windows (PowerShell):
+
+```powershell
+cd kafkaExample/python-consumer
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python consumer.py --from-beginning
+```
+
+Para consumir topicos especificos:
+
+```bash
+python consumer.py --topics unsc-topic covenant-topic flood-topic --group-id python-extra-consumer
+```
+
+## 7. Detener todo
 
 1. Deten los servicios Spring Boot con `Ctrl + C` en sus terminales.
 2. Baja Docker Compose:
