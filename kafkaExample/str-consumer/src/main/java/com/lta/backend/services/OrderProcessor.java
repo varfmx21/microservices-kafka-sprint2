@@ -7,25 +7,30 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class OrderProcessor {
 
-    public String process(String message){
+    public String process(String topic, int partition, String message){
 
-        String msg = message.toLowerCase();
+        String normalizedMessage = message == null ? "" : message.toLowerCase();
         String response;
 
-        if(msg.contains("vegan")){
-            response = "Vegan menu: tofu bowl, quinoa salad, green smoothie";
-        } 
-        else if(msg.contains("vegetarian")){
-            response = "Vegetarian menu: pesto pasta, margherita pizza, caprese salad";
-        } 
-        else if(msg.contains("meat") || msg.contains("chicken") || msg.contains("beef")){
-            response = "Meat menu: burger, beef tacos, roasted chicken";
-        } 
-        else {
-            response = "General menu: pasta, salad, soup";
+        if ("unsc-topic".equals(topic)) {
+            if (partition == 0 || normalizedMessage.contains("chief")) {
+                response = "\"I need a weapon.\" - Master Chief";
+            } else if (partition == 1 || normalizedMessage.contains("cortana")) {
+                response = "\"Don't make a girl a promise... if you know you can't keep it.\" - Cortana";
+            } else {
+                response = "\"Wake me... when you need me.\" - Master Chief";
+            }
+        } else if ("covenant-topic".equals(topic)) {
+            response = "\"The Great Journey waits for no one, brother.\" - Prophet of Truth";
+        } else if ("flood-topic".equals(topic)) {
+            response = "\"I am a monument to all your sins.\" - Gravemind";
+        } else if ("forerunner-response-topic".equals(topic)) {
+            response = "\"The Mantle of Responsibility shelters all.\" - Forerunner Lore";
+        } else {
+            response = "\"Spartans never die, they are only missing in action.\" - UNSC Protocol";
         }
 
-        log.info("Generated response: {}", response);
+        log.info("Generated response for topic {} partition {}: {}", topic, partition, response);
 
         return response;
     }

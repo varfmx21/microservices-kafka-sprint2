@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.messaging.handler.annotation.Header;
 
 import com.lta.backend.services.OrderProcessor;
 
@@ -27,12 +29,14 @@ public class StrConsumerListener {
                 @TopicPartition(topic = "unsc-topic", partitions = {"0", "1"})
             },
             containerFactory = "validMessageContainerFactory")
-    public void listenerUnsc(String message) {
+    public void listenerUnsc(String message,
+                             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+                             @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
         log.info("LISTENER UNSC ::: Recibiendo un mensaje {}", message);
-        String menu = orderProcessor.process(message);
-        log.info("Suggested menu: {}", menu);
+        String quote = orderProcessor.process(topic, partition, message);
+        log.info("Halo quote: {}", quote);
         // Envía respuesta al tópico de respuestas
-        kafkaTemplate.send("unsc-topic-response", menu);
+        kafkaTemplate.send("unsc-topic-response", quote);
     }
 
     // Listener para mensajes COVENANT (partición 0)
@@ -40,12 +44,14 @@ public class StrConsumerListener {
     @KafkaListener(groupId = "group-covenant",
             topicPartitions = @TopicPartition(topic = "covenant-topic", partitions = {"0"}),
             containerFactory = "validMessageContainerFactory")
-    public void listenerCovenant(String message) {
+    public void listenerCovenant(String message,
+                                 @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+                                 @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
         log.info("LISTENER COVENANT ::: Recibiendo un mensaje {}", message);
-        String menu = orderProcessor.process(message);
-        log.info("Suggested menu: {}", menu);
+        String quote = orderProcessor.process(topic, partition, message);
+        log.info("Halo quote: {}", quote);
         // Envía respuesta al tópico de respuestas
-        kafkaTemplate.send("covenant-topic-response", menu);
+        kafkaTemplate.send("covenant-topic-response", quote);
     }
 
     // Listener para mensajes FLOOD (partición 0)
@@ -53,12 +59,14 @@ public class StrConsumerListener {
     @KafkaListener(groupId = "group-flood",
             topicPartitions = @TopicPartition(topic = "flood-topic", partitions = {"0"}),
             containerFactory = "validMessageContainerFactory")
-    public void listenerFlood(String message) {
+    public void listenerFlood(String message,
+                              @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+                              @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
         log.info("LISTENER FLOOD ::: Recibiendo un mensaje {}", message);
-        String menu = orderProcessor.process(message);
-        log.info("Suggested menu: {}", menu);
+        String quote = orderProcessor.process(topic, partition, message);
+        log.info("Halo quote: {}", quote);
         // Envía respuesta al tópico de respuestas
-        kafkaTemplate.send("flood-topic-response", menu);
+        kafkaTemplate.send("flood-topic-response", quote);
     }
 
     // Listener para mensajes FORERUNNER
@@ -66,12 +74,14 @@ public class StrConsumerListener {
     @KafkaListener(groupId = "group-forerunner",
             topics = "forerunner-response-topic",
             containerFactory = "validMessageContainerFactory")
-    public void listenerForerunner(String message) {
+    public void listenerForerunner(String message,
+                                   @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+                                   @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
         log.info("LISTENER FORERUNNER ::: Recibiendo un mensaje {}", message);
-        String menu = orderProcessor.process(message);
-        log.info("Suggested menu: {}", menu);
+        String quote = orderProcessor.process(topic, partition, message);
+        log.info("Halo quote: {}", quote);
         // Envía respuesta al tópico de respuestas
-        kafkaTemplate.send("forerunner-response", menu);
+        kafkaTemplate.send("forerunner-response", quote);
     }
 
 }
