@@ -49,7 +49,7 @@ public class StringProducerService {
                 return;
             }
             log.info("Mensaje enviado con exito: {}",result.getProducerRecord().value());
-            log.info("Particion {}, Offset {}", result.getRecordMetadata().partition(),result.getRecordMetadata().offset());
+            log.info("Topic: {}, Particion: {}, Offset: {}", result.getRecordMetadata().topic(), result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
         });
     }
 }
